@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# OS / editor
+.DS_Store
+
+# Test & tooling artifacts
+.playwright-mcp/
+*.log
+
+# Local agent / session state
+.claude/
+
+# Stray verification screenshots
+/cockpit-report-result.png
