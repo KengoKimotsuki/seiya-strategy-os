@@ -4,6 +4,8 @@
  * この文字列が「議題（topic）」として全専門家と古賀CMOに共有される。
  */
 
+import { type AttachedFile, attachmentsToContext } from './fileImport';
+
 export interface CaseBrief {
   title: string; // 案件名（ヘッダー・レポートメタ・保存キーに使用）
   company: string; // 会社 / 事業主体
@@ -12,6 +14,7 @@ export interface CaseBrief {
   target: string; // ターゲット顧客
   current: string; // 現状（数値・KPI・競合状況など）
   constraints: string; // 制約（予算上限・期限・既存KPI など）
+  attachments: AttachedFile[]; // 添付資料（PDF / CSV の抽出テキスト）
 }
 
 export function emptyCaseBrief(): CaseBrief {
@@ -23,6 +26,7 @@ export function emptyCaseBrief(): CaseBrief {
     target: '',
     current: '',
     constraints: '',
+    attachments: [],
   };
 }
 
@@ -45,7 +49,8 @@ export function briefToContext(brief: CaseBrief): string {
   const lines = rows
     .filter(([, value]) => value.trim().length > 0)
     .map(([label, value]) => `- ${label}: ${value.trim()}`);
-  return lines.join('\n');
+  const attachmentText = attachmentsToContext(brief.attachments ?? []);
+  return [lines.join('\n'), attachmentText].filter((s) => s.trim().length > 0).join('\n\n');
 }
 
 /** 会議のタイトル（案件名が空ならフォールバック）。 */
