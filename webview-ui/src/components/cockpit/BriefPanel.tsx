@@ -7,7 +7,9 @@ import {
   caseTitle,
   isCaseBriefReady,
 } from '../../strategy/caseInput';
+import type { AttachedFile } from '../../strategy/fileImport';
 import { Button } from '../ui/Button';
+import { AttachmentPanel } from './AttachmentPanel';
 
 const ROUND_OPTIONS = [1, 2, 3, 4, 5];
 
@@ -93,6 +95,11 @@ export function BriefPanel({
               {brief.challenge}
             </div>
           )}
+          {(brief.attachments ?? []).filter((f) => !f.error).length > 0 && (
+            <div className="text-2xs text-accent-bright">
+              添付資料 {(brief.attachments ?? []).filter((f) => !f.error).length}件
+            </div>
+          )}
         </div>
         <Button size="sm" variant="default" onClick={onReset} disabled={running}>
           ＋ 新しい案件
@@ -156,6 +163,11 @@ export function BriefPanel({
         value={brief.constraints}
         placeholder="例: 予算上限 月200万、6ヶ月、人員2名"
         onChange={(v) => set({ constraints: v })}
+      />
+
+      <AttachmentPanel
+        attachments={brief.attachments ?? []}
+        onChange={(files: AttachedFile[]) => set({ attachments: files })}
       />
 
       {mode === 'api' && (
